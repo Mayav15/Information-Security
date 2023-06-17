@@ -1,0 +1,61 @@
+import random
+
+def isPrimitive(G,P):
+    power_list = []
+    for i in range(2,P):
+        p = int(G**i)%P
+        power_list.append(p)
+    power_set = set(power_list)
+    if len(power_set)==len(power_list):
+        return True
+    return False
+
+def random_P_generator(start,end):
+    prime_list = []
+    for n in range(start, end+1):
+        prime = True
+        for x in range(2, n):
+            if n % x == 0:
+                prime = False
+        if prime:
+            prime_list.append(n)
+    return random.choice(prime_list)
+
+def random_G_generator(P):
+    primitive_list = []
+    for i in range(1,P):
+        if isPrimitive(i,P):
+            primitive_list.append(i)
+    return random.choice(primitive_list)
+
+
+
+
+P = random_P_generator(43,79)
+G = random_G_generator(P)
+print('The Value of P is :%d'%(P))
+print('The Value of G is :%d'%(G))
+
+# Alice
+a = 4 
+x = int(G**a)%P
+
+# Bob
+b = 3
+y = int(G**b)%P
+
+# Alice
+ka = int(y**a)%P
+
+# Bob
+kb = int(x**b)%P
+
+print()
+print("\t\t\tP="+str(P)+", G="+str(G))
+print()
+print("Alice\t\t\t\t\tBob")
+print()
+print("PrivateKey = "+str(a)+"\t\t\tPrivateKey = "+str(b))
+print("MessageX = "+str(x)+"\t\t\tMessageY = "+str(y))
+print("MessageReceived = "+str(y)+"\tMessageReceived = "+str(x))
+print("GenKey = "+str(ka)+"\t\t\t\tGenKey = "+str(kb))

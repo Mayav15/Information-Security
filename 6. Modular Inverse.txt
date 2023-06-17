@@ -1,0 +1,45 @@
+def modular_additive_inverse(a,b):
+    return (b-a)%b
+
+def modular_multiplicative_inverse(a,b):
+    if gcd(b,a)==1:
+        x={-1:1,0:0}
+        y={-1:0,0:1}
+        a0=a
+        q=b//a0
+        r=b%a0
+        p=0
+        while(r>0):
+            p+=1
+            x[p]=x[p-2]-(q*x[p-1])
+            y[p]=y[p-2]-(q*y[p-1])
+            temp=r
+            r=a0%r
+            q=a0//temp
+            a0=temp
+        mmi = y[p]
+        if mmi<0:
+            mmi+=26
+        return mmi
+    else:
+        return -1
+        
+def gcd(b,a):
+    if a>b:
+        c=a
+        a=b
+        b=c
+    if a==0:
+        return b
+    else:
+        return gcd(a,b%a)
+
+a = 29
+b = 26
+m_a_i = modular_additive_inverse(a,b)
+m_m_i = modular_multiplicative_inverse(a,b)
+
+a,b,m_a_i,m_m_i=str(a),str(b),str(m_a_i),str(m_m_i)
+
+print ("Modular Additive Inverse of "+a+" w.r.t. "+b+" = "+m_a_i)
+print ("Modular Multiplicative Inverse of "+a+" w.r.t. "+b+" = "+m_m_i)

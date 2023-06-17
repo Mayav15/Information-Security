@@ -1,0 +1,58 @@
+import math
+import numpy as np
+
+def modInverse(a, m):
+    for x in range(1, m):
+        if (((a%m) * (x%m)) % m == 1):
+            return x
+    return -1
+
+def transform_text(text):
+    n = len(text)
+    l = []
+    for i in text:
+        l.append(ord(i)-65)
+    l = np.array(l).reshape(n,1)
+    return l
+
+def retransform_text(text):
+    final_text = ''
+    n = len(text)
+    text = text.reshape(n,)
+    for i in text:
+        final_text += chr(int(i)+65)
+    return final_text
+
+def transform_key(key):
+    n = int(math.sqrt(len(key)))
+    l = []
+    for i in key:
+        l.append(ord(i)-65)
+    l = np.array(l).reshape(n,n)
+    return l
+    
+def encrypt(plain_text,key):
+    plain_text = transform_text(plain_text)
+    key = transform_key(key)
+    cipher_text = (key @ plain_text)%26
+    cipher_text = retransform_text(cipher_text)
+    return cipher_text
+
+def decrypt(cipher_text,key):
+    cipher_text = transform_text(cipher_text)
+    key = transform_key(key)
+    adjoint_key = np.linalg.inv(key)*np.linalg.det(key)
+    key_1 = (adjoint_key*modInverse(np.linalg.det(key),26))%26
+    plain_text = (key_1 @ cipher_text)%26
+    plain_text = retransform_text(plain_text)
+    return plain_text
+
+plain_text = "ACT"
+key = "GYBNQKURP"
+cipher_text = encrypt(plain_text,key)
+plain_text_2 = decrypt(cipher_text,key)
+
+print ("Plain Text  : " + plain_text)
+print ("Key : " + str(key))
+print ("Cipher Text: " + cipher_text)
+print ("Plain Text from Cipher Text: " + plain_text_2)

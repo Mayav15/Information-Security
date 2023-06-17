@@ -1,0 +1,49 @@
+import numpy as np
+import pandas as pd
+import math
+
+def encrypt(plain_text,key):
+    cipher_text = ''
+    key = list(key)
+    key_ = [i for i in key]
+    key_.sort()
+    n = math.ceil(len(plain_text)/len(key))
+    plain_text = list(plain_text)
+    while(len(plain_text)!=n*len(key)):
+        plain_text.append('_')
+    plain_matrix = pd.DataFrame(np.array(plain_text).reshape(n,len(key)),columns=key)
+    for i in key_:
+        for j in plain_matrix[i]:
+            cipher_text += j
+    return cipher_text
+    
+def decrypt(cipher_text,key):
+    plain_text = ''
+    key = list(key)
+    key_ = [i for i in key]
+    key_.sort()
+    n = int(len(cipher_text)/len(key))
+    cipher_text = list(cipher_text)
+    cipher_matrix = pd.DataFrame(np.array(cipher_text).reshape(len(key),n),index=key_)
+    cipher_matrix = cipher_matrix.T
+    cipher_matrix_2 = pd.DataFrame()
+    for i in key:
+        cipher_matrix_2[key]=cipher_matrix[key]
+    for i in range(0,n):
+        for j in cipher_matrix_2.iloc[i]:
+            plain_text += j
+    plain_text = list(plain_text)
+    while(plain_text[-1]=='_'):
+        plain_text.pop()
+    plain_text = ''.join(plain_text)
+    return plain_text
+
+plain_text = "I am here on a mission"
+key = "ZANDER"
+cipher_text = encrypt(plain_text,key)
+plain_text_2 = decrypt(cipher_text,key)
+
+print ("Plain Text  : " + plain_text)
+print ("Key : " + str(key))
+print ("Cipher Text: " + cipher_text)
+print ("Plain Text from Cipher Text: " + plain_text_2)

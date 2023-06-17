@@ -1,0 +1,60 @@
+# def prime_generator(end):
+#     for n in range(3, end):     
+#         for x in range(3, n):   
+#             if n % x == 0:      
+#                 break
+#         else:                   
+#             yield n
+
+# def random_2_prime_numbers(end):
+#     g = list(prime_generator(end))
+#     g = g[-25:]
+#     random.shuffle(g)
+#     a = g[random.randrange(0, 25)]
+#     while a%2==0:
+#         a = g[random.randrange(0, 25)]
+#     b = a
+#     while a==b or b%2==0:
+#         random.shuffle(g)
+#         b = g[random.randrange(0, 25)]
+#     return a,b
+
+def modular_multiplicative_inverse(a,b):
+    for i in range(1,b):
+        if ((a%b)*(i%b))%b==1:
+            return i
+
+def rsa_key_generation():
+    p,q = (23,13)
+    # p,q = random_2_prime_numbers(100)
+    n = p*q
+    phi_n = (p-1)*(q-1)
+    relatively_prime = []
+    # for i in range(2,phi_n):
+    #     if math.gcd(i,phi_n)==1:
+    #         relatively_prime.append(i)
+    # random.shuffle(relatively_prime)
+    # e = relatively_prime[random.randrange(0, len(relatively_prime))]
+    e=13
+    d = modular_multiplicative_inverse(e,phi_n)
+    print("d = ",d)
+    return {'Public Key':(e,n),'Private Key':d}
+    
+def encrypt(number,public_key):
+    return (number**public_key[0])%public_key[1]
+
+def decrypt(enc_message,public_key,private_key):
+    return (enc_message**private_key)%public_key[1]
+
+plain_text = 151
+keys = rsa_key_generation()
+cipher_text = encrypt(plain_text,keys['Public Key'])
+plain_text_2 = decrypt(cipher_text,keys['Public Key'],keys['Private Key'])
+
+print ("Plain Text  : " + str(plain_text))
+print ("Key : " + str(keys))
+print ("Cipher Text: " + str(cipher_text))
+print ("Plain Text from Cipher Text: " + str(plain_text_2))
+
+
+

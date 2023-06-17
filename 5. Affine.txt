@@ -1,0 +1,70 @@
+def modular_multiplicative_inverse(a,b):
+    if gcd(b,a)==1:
+        x={-1:1,0:0}
+        y={-1:0,0:1}
+        a0=a
+        q=b//a0
+        r=b%a0
+        p=0
+        while(r>0):
+            p+=1
+            x[p]=x[p-2]-(q*x[p-1])
+            y[p]=y[p-2]-(q*y[p-1])
+            temp=r
+            r=a0%r
+            q=a0//temp
+            a0=temp
+        mmi = y[p]
+        if mmi<0:
+            mmi+=26
+        return mmi
+    else:
+        return -1
+        
+def gcd(b,a):
+    if a>b:
+        c=a
+        a=b
+        b=c
+    if a==0:
+        return b
+    else:
+        return gcd(a,b%a)
+
+def encrypt(plain_text, key1, key2):
+    cipher_text = ""
+    for i in plain_text:
+        k = ord(i)
+        if k>=65 and k<=90:
+            cipher_text+= chr((((((k-65)*key1)%26)+key2)%26)+65)
+        elif k>=97 and k<=122:
+            cipher_text+= chr((((((k-97)*key1)%26)+key2)%26)+97)
+        else:
+            cipher_text+= i
+    return cipher_text
+
+def decrypt(cipher_text, key1, key2):
+    mi_key1 = modular_multiplicative_inverse(key1,26)
+    if mi_key1==-1:
+        return "Error: "+str(key1)+" and 26 are not co-prime numbers"
+    plain_text = ""
+    for i in cipher_text:
+        k = ord(i)
+        if k>=65 and k<=90:
+            plain_text+= chr((((((k-65)-key2)%26)*mi_key1)%26)+65)
+        elif k>=97 and k<=122:
+            plain_text+= chr((((((k-97)-key2)%26)*mi_key1)%26)+97)
+        else:
+            plain_text+= i
+    return plain_text
+
+plain_text = "I am here on a mission"
+key1 = 17
+key2 = 15
+cipher_text = encrypt(plain_text,key1,key2)
+plain_text_2 = decrypt(cipher_text,key1,key2)
+
+print ("Plain Text  : " + plain_text)
+print ("Key 1: "+str(key1)+"\tKey 2: "+str(key2))
+print ("Cipher Text: " + cipher_text)
+print ("Plain Text from Cipher Text: " + plain_text_2)

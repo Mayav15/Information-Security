@@ -1,0 +1,94 @@
+import numpy as np
+
+def coordinate_locator(matrix,value):
+    for i in range(matrix.shape[0]):
+        for j in range(matrix.shape[1]):
+            if matrix[i][j]==value:
+                return i,j
+
+def encrypt(plain_text,key):
+    cipher_text = ''
+    plain_text_2 = ''
+    l = []
+    if len(plain_text)%2!=0:
+        plain_text +='Z'
+    for i in plain_text:
+        if i=='J':
+            plain_text_2 += 'I'
+        else:
+            plain_text_2 += i
+    plain_text = plain_text_2
+    for i in range(0,len(plain_text),2):
+        x = plain_text[i]+plain_text[i+1]
+        l.append(x)
+    key_ = key + 'ABCDEFGHIKLMNOPQRSTUVWXYZ'
+    key__ = []
+    for i in key_:
+        if i not in key__:
+            key__.append(i)
+    key_matrix = np.array(key__).reshape(5,5)
+    for i in l:
+        L1,L2 = i[0],i[1]
+        i1,j1 = coordinate_locator(key_matrix,L1)
+        i2,j2 = coordinate_locator(key_matrix,L2)
+        i1_,j1_,i2_,j2_ = -1,-1,-1,-1
+        if j1==j2:
+            i1_ = (i1+1)%5
+            i2_ = (i2+1)%5
+            j1_,j2_ = j1,j2
+        elif i1==i2:
+            j1_ = (j1+1)%5
+            j2_ = (j2+1)%5
+            i1_,i2_ = i1,i2
+        else:
+            i1_,j1_ = i1,j2
+            i2_,j2_ = i2,j1
+        L1_,L2_ = key_matrix[i1_][j1_],key_matrix[i2_][j2_]
+        cipher_text = cipher_text + L1_ + L2_
+    return cipher_text
+        
+        
+
+def decrypt(cipher_text,key):
+    plain_text = ''
+    l = []
+    key_ = key + 'ABCDEFGHIKLMNOPQRSTUVWXYZ'
+    key__ = []
+    for i in key_:
+        if i not in key__:
+            key__.append(i)
+    key_matrix = np.array(key__).reshape(5,5)
+    for i in range(0,len(cipher_text),2):
+        x = cipher_text[i]+cipher_text[i+1]
+        l.append(x)
+    for i in l:
+        L1,L2 = i[0],i[1]
+        i1,j1 = coordinate_locator(key_matrix,L1)
+        i2,j2 = coordinate_locator(key_matrix,L2)
+        i1_,j1_,i2_,j2_ = -1,-1,-1,-1
+        if j1==j2:
+            i1_ = (i1-1)%5
+            i2_ = (i2-1)%5
+            j1_,j2_ = j1,j2
+        elif i1==i2:
+            j1_ = (j1-1)%5
+            j2_ = (j2-1)%5
+            i1_,i2_ = i1,i2
+        else:
+            i1_,j1_ = i1,j2
+            i2_,j2_ = i2,j1
+        L1_,L2_ = key_matrix[i1_][j1_],key_matrix[i2_][j2_]
+        plain_text = plain_text + L1_ + L2_
+    if plain_text[-1]=='Z':
+        plain_text = plain_text[:-1]
+    return plain_text
+
+plain_text = "INSTRUMENTS"
+key = "MONARCHY"
+cipher_text = encrypt(plain_text,key)
+plain_text_2 = decrypt(cipher_text,key)
+
+print ("Plain Text  : " + plain_text)
+print ("Key : " + str(key))
+print ("Cipher Text: " + cipher_text)
+print ("Plain Text from Cipher Text: " + plain_text_2)
