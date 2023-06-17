@@ -1,0 +1,8 @@
+# Information-Security
+This repository serves as a comprehensive resource for those who are intrigued by cryptography, providing a detailed collection of fundamental cryptographic algorithms. It encompasses everything from basic encryption schemes like the Caesar Cipher to modern encryption techniques such as the Advanced Encryption Standard (AES) and Data Encryption Standard (DES). Furthermore, it encompasses a variety of other cryptographic schemes, each designed with a specific use-case and security level in mind. 
+
+Inside this repository, users will find an extensive list of algorithms categorized into two main types: stream ciphers and block ciphers. Stream ciphers encrypt plaintext symbols (characters or bits) one at a time in a stream, while block ciphers operate on fixed-length groups of bits known as blocks. Both types have their own specific strengths and use cases in the realm of cryptography. This diverse array of cryptographic codes provides a robust toolset for various encryption tasks.
+
+Moreover, this repository goes beyond simply providing cipher algorithms. It also includes code implementations for foundational cryptographic concepts and mathematical operations that are required to understand and apply many of these cryptographic systems effectively. These additional resources include implementations for Modular Inverse, Primitive Roots, and other such essential concepts. 
+
+For example, the modular inverse operation is used widely in the realm of public-key cryptography, and having an understanding of this concept is crucial for practical cryptographic tasks. Similarly, understanding primitive roots is key in several cryptographic systems that operate in multiplicative groups of integers modulo n. 
